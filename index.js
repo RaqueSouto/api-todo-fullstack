@@ -40,6 +40,28 @@ servidor.post("/tareas/nueva", async (peticion,respuesta,siguiente) => {
     }
 })
 
+servidor.put("/tareas/actualizar/:id([0-9]+)/:operacion(1|2)", async (peticion,respuesta,siguiente) => {
+    let operacion = Number(peticion.params.operacion);
+    let funciones = [editarTexto,toggleEstado];
+
+    if(operacion == 1 && (!peticion.body.tarea || peticion.body.tarea.trim() == "")){
+        return siguiente(true);
+    }
+
+    try{
+        let count = await funciones[operacion - 1](peticion.params.id, operacion == 1 ? peticion.body.tarea : null);
+
+        respuesta.json({ resultado : count ? "ok" : "ko" });
+
+    }catch(error){
+        respuesta.status(500);
+
+        respuesta.json(error);
+    }
+
+
+})
+
 servidor.delete("/tareas/borrar/:id([0-9]+)", async (peticion,respuesta) => {
     try{
 
