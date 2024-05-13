@@ -12,6 +12,7 @@ servidor.use(cors());
 
 servidor.use(json());
 
+//lo que sea
 
 if(process.env.LOCAL){
     servidor.use(express.static("./pruebas"));
